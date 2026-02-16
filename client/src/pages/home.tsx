@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check, ChevronRight, BarChart3, Wallet, Shield, TrendingUp, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -41,7 +41,34 @@ function Navbar() {
   );
 }
 
+function useScrollTilt() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [tilt, setTilt] = useState({ rotateX: 12, scale: 0.95 });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const elementCenter = rect.top + rect.height / 2;
+      const viewportCenter = windowHeight / 2;
+      const progress = Math.max(0, Math.min(1, 1 - (elementCenter - viewportCenter) / windowHeight));
+      const rotateX = 12 - progress * 14;
+      const scale = 0.95 + progress * 0.05;
+      setTilt({ rotateX, scale });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return { ref, tilt };
+}
+
 function HeroSection() {
+  const { ref: tiltRef, tilt } = useScrollTilt();
+
   return (
     <section className="relative pt-32 pb-8 px-4 md:px-8 lg:px-16 overflow-hidden" data-testid="section-hero">
       <div className="absolute inset-0 overflow-hidden">
@@ -111,9 +138,17 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-16 relative"
+          style={{ perspective: "1200px" }}
         >
           <div className="absolute -inset-4 bg-gradient-to-t from-black via-transparent to-transparent z-10 pointer-events-none" />
-          <div className="relative rounded-xl overflow-hidden border border-white/10 bg-white/5">
+          <div
+            ref={tiltRef}
+            className="relative rounded-xl overflow-hidden border border-white/10 bg-white/5 transition-transform duration-100 ease-out will-change-transform"
+            style={{
+              transform: `rotateX(${tilt.rotateX}deg) scale(${tilt.scale})`,
+              transformOrigin: "center bottom",
+            }}
+          >
             <img
               src="/images/chart2.png"
               alt="Trade Dashboard"
@@ -159,6 +194,13 @@ function PartnersSection() {
     </section>
   );
 }
+
+const featureImages = [
+  "/images/fit1.png",
+  "/images/fit2.png",
+  "/images/fit3.png",
+  "/images/fit4.png",
+];
 
 const features = [
   {
@@ -243,23 +285,24 @@ function FeaturesSection() {
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
+          <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-purple-600/10 rounded-2xl blur-xl opacity-50" />
             <div className="relative rounded-xl overflow-hidden border border-white/10">
-              <img
-                src="/images/fit1.png"
-                alt="Advanced Trading Interface"
-                className="w-full h-auto"
-                data-testid="img-features"
-              />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={activeFeature}
+                  src={featureImages[activeFeature]}
+                  alt={features[activeFeature].title}
+                  className="w-full h-auto"
+                  data-testid="img-features"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                />
+              </AnimatePresence>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -488,6 +531,22 @@ function TestimonialsSection() {
   );
 }
 
+function GridBackground() {
+  return (
+    <svg
+      className="absolute inset-0 w-full h-full opacity-[0.07]"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <pattern id="cta-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#cta-grid)" />
+    </svg>
+  );
+}
+
 function CTASection() {
   return (
     <section id="cta" className="py-24 px-4 md:px-8 lg:px-16" data-testid="section-cta">
@@ -500,22 +559,27 @@ function CTASection() {
           className="relative"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-purple-600/10 to-primary/10 rounded-2xl blur-xl" />
-          <div className="relative p-12 md:p-16 rounded-2xl border border-white/10 bg-white/[0.03]">
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Ready to start trading?
-            </h2>
-            <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg mx-auto">
-              Join thousands of traders who have already discovered the power of our platform.
-            </p>
-            <Button asChild variant="outline" size="lg" className="rounded-full">
-              <a href="#" data-testid="button-create-account">
-                Create Account
-                <ChevronRight className="w-4 h-4" />
-              </a>
-            </Button>
+          <div className="relative rounded-2xl border border-white/10 overflow-hidden">
+            <GridBackground />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/10 rounded-full blur-[100px] opacity-60" />
+            <div className="relative z-10 p-12 md:p-16">
+              <h2
+                className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                Ready to start trading?
+              </h2>
+              <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg mx-auto">
+                Join thousands of traders who have already discovered the power of our platform.
+              </p>
+              <Button asChild variant="outline" size="lg" className="rounded-full">
+                <a href="#" data-testid="button-create-account">
+                  Create Account
+                  <ChevronRight className="w-4 h-4" />
+                </a>
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
