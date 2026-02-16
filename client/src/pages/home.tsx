@@ -121,7 +121,7 @@ function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-base md:text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed"
+        className="text-sm sm:text-base md:text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed"
       >
         Experience seamless forex trading with advanced features, real-time
         analytics, and institutional-grade security.{" "}
@@ -132,18 +132,18 @@ function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex items-center gap-4 flex-wrap"
+        className="flex items-center gap-3 sm:gap-4 flex-wrap"
       >
         <button
           onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
-          className="bg-indigo-500 text-white px-6 py-3 rounded-full text-base clash-display cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+          className="bg-indigo-500 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base clash-display cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
           data-testid="button-start-trading-hero"
         >
           Start Trading Now
         </button>
         <button
           onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
-          className="glass rounded-full px-6 py-3 text-base text-white flex items-center gap-2 cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+          className="glass rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-white flex items-center gap-2 cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
           data-testid="button-view-markets"
         >
           View Markets
@@ -155,7 +155,7 @@ function HeroSection() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
-        className="mt-16 relative"
+        className="mt-10 sm:mt-16 relative"
         style={{ perspective: 600 }}
       >
         <motion.div
@@ -193,7 +193,7 @@ function PartnersSection() {
   return (
     <section className="w-full overflow-hidden cursor-pointer bg-[#050505] backdrop-blur-sm py-8 sm:py-12 mt-12 sm:mt-20" data-testid="section-partners">
       <motion.div
-        className="flex gap-12 items-center"
+        className="flex gap-8 sm:gap-12 items-center"
         initial={{ opacity: 0, x: 0 }}
         animate={{ opacity: 1, x: "-50%" }}
         transition={{
@@ -206,7 +206,7 @@ function PartnersSection() {
             key={i}
             src={logo}
             alt={`Partner ${(i % 5) + 1}`}
-            className="h-8 object-contain"
+            className="h-6 sm:h-8 object-contain"
             initial={{ opacity: 0.5 }}
             whileHover={{ opacity: 1, scale: 1.05 }}
             data-testid={`img-partner-${i}`}
@@ -287,8 +287,8 @@ function FeaturesSection() {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-        <div className="md:col-span-5 space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="lg:col-span-5 space-y-3">
           {features.map((feature, i) => (
             <div
               key={i}
@@ -326,7 +326,7 @@ function FeaturesSection() {
           ))}
         </div>
 
-        <div className="md:col-span-7 min-h-[320px] relative">
+        <div className="lg:col-span-7 min-h-[250px] sm:min-h-[320px] relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFeature}
@@ -440,12 +440,12 @@ function PricingSection() {
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-6 clash-display text-white">
           Choose Your <span className="grad1 clash-display">Trading Plan</span>
         </h2>
-        <p className="text-lg text-gray-400">
+        <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-xl mx-auto">
           Select the perfect trading plan with advanced features and competitive fees
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {plans.map((plan, i) => (
           <motion.div
             key={i}
@@ -457,13 +457,13 @@ function PricingSection() {
           >
             <GlowCard popular={plan.popular}>
               <div className="p-6 sm:p-8 flex flex-col h-full">
-                {plan.popular && (
-                  <div className="mb-4">
+                <div className="h-8 mb-2 flex items-center">
+                  {plan.popular ? (
                     <span className="text-xs font-medium bg-indigo-400/30 text-indigo-100 rounded-full px-3 py-1">
                       Most Popular
                     </span>
-                  </div>
-                )}
+                  ) : null}
+                </div>
 
                 <div className="mb-6">
                   <h3
@@ -476,7 +476,7 @@ function PricingSection() {
                     {plan.name}
                   </h3>
                   <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-4xl font-bold clash-display text-indigo-300">{plan.price}</span>
+                    <span className="text-3xl sm:text-4xl font-bold clash-display text-indigo-300">{plan.price}</span>
                     {plan.period && <span className="text-zinc-400 text-sm">{plan.period}</span>}
                   </div>
                   <p className="text-zinc-400 text-sm">{plan.description}</p>
@@ -492,7 +492,7 @@ function PricingSection() {
                 </ul>
 
                 <button
-                  className="button-gradient w-full bg-indigo-500 py-4 text-white rounded-full text-base sm:text-lg clash-display cursor-pointer mt-auto"
+                  className="button-gradient w-full bg-indigo-500 py-3.5 sm:py-4 text-white rounded-full text-base clash-display cursor-pointer mt-auto"
                   data-testid={`button-pricing-${i}`}
                 >
                   Start Trading
@@ -553,7 +553,7 @@ function TestimonialsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-4 clash-display text-white">
             Trusted by Traders
           </h2>
-          <p className="text-zinc-400/90 text-lg">
+          <p className="text-zinc-400/90 text-sm sm:text-base md:text-lg">
             Join thousands of satisfied traders on ForexTrade
           </p>
         </div>
@@ -570,11 +570,11 @@ function TestimonialsSection() {
             e.currentTarget.style.setProperty("--marquee-play-state", "running");
           }}
         >
-          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
+          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-4 sm:gap-6 md:gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="w-[300px] sm:w-[350px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-6 sm:p-8 border-2 rounded-xl"
+                className="w-[280px] sm:w-[340px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-5 sm:p-6 md:p-8 border-2 rounded-xl"
                 data-testid={`testimonial-card-${i}`}
               >
                 <div className="flex items-center gap-4 mb-6">
@@ -596,11 +596,11 @@ function TestimonialsSection() {
               </div>
             ))}
           </div>
-          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
+          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-4 sm:gap-6 md:gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
             {testimonials.map((t, i) => (
               <div
                 key={`dup-${i}`}
-                className="w-[300px] sm:w-[350px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-6 sm:p-8 border-2 rounded-xl"
+                className="w-[280px] sm:w-[340px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-5 sm:p-6 md:p-8 border-2 rounded-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   {t.avatar ? (
@@ -643,11 +643,11 @@ function CTASection() {
         <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
           <span className="grad1">Ready to start trading?</span>
         </h2>
-        <p className="text-zinc-400 text-base md:text-lg mb-8 max-w-lg mx-auto">
+        <p className="text-zinc-400 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-lg mx-auto">
           Join thousands of traders who have already discovered the power of our platform.
         </p>
         <button
-          className="button-gradient flex items-center mx-auto text-lg bg-gradient-to-r from-indigo-400 to-indigo-500 clash-display hover:-translate-y-1 transition2 text-white py-3 rounded-full px-5 cursor-pointer"
+          className="button-gradient flex items-center mx-auto text-base sm:text-lg bg-gradient-to-r from-indigo-400 to-indigo-500 clash-display hover:-translate-y-1 transition2 text-white py-2.5 sm:py-3 rounded-full px-5 cursor-pointer"
           data-testid="button-create-account"
         >
           Create Account
