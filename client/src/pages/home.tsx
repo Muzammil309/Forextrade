@@ -33,14 +33,14 @@ function Navbar() {
       </a>
 
       <nav className="hidden md:flex items-center gap-6">
-        {["Features", "Prices", "Testimonials"].map((item) => (
+        {[{ label: "Features", id: "features" }, { label: "Prices", id: "pricing" }, { label: "Testimonials", id: "testimonials" }].map((item) => (
           <button
-            key={item}
-            onClick={() => scrollTo(item.toLowerCase())}
+            key={item.label}
+            onClick={() => scrollTo(item.id)}
             className="text-sm text-zinc-400 hover:-translate-y-1 ease-out transition-all duration-200 cursor-pointer"
-            data-testid={`link-${item.toLowerCase()}`}
+            data-testid={`link-${item.id}`}
           >
-            {item}
+            {item.label}
           </button>
         ))}
       </nav>
@@ -63,13 +63,13 @@ function Navbar() {
 
       {mobileOpen && (
         <div className="absolute top-16 left-0 right-0 bg-[#1B1B1B] border border-white/10 rounded-xl p-4 flex flex-col gap-3 md:hidden">
-          {["Features", "Prices", "Testimonials"].map((item) => (
+          {[{ label: "Features", id: "features" }, { label: "Prices", id: "pricing" }, { label: "Testimonials", id: "testimonials" }].map((item) => (
             <button
-              key={item}
-              onClick={() => scrollTo(item.toLowerCase())}
+              key={item.label}
+              onClick={() => scrollTo(item.id)}
               className="text-sm text-zinc-400 text-left py-2"
             >
-              {item}
+              {item.label}
             </button>
           ))}
           <button
@@ -85,7 +85,7 @@ function Navbar() {
 }
 
 function HeroSection() {
-  const targetRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start end", "center center"],
@@ -93,7 +93,7 @@ function HeroSection() {
   const rotateX = useTransform(scrollYProgress, [0, 1], [30, 0]);
 
   return (
-    <section className="relative container mx-auto px-4 pt-40 pb-20" data-testid="section-hero">
+    <section ref={targetRef} className="relative container mx-auto px-4 pt-40 pb-20" data-testid="section-hero">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -159,7 +159,6 @@ function HeroSection() {
         style={{ perspective: 600 }}
       >
         <motion.div
-          ref={targetRef}
           className="glass rounded-xl overflow-hidden"
           style={{ rotateX, transformStyle: "preserve-3d" }}
         >
@@ -430,7 +429,7 @@ const plans = [
 
 function PricingSection() {
   return (
-    <section id="prices" className="container mx-auto px-4 py-24" data-testid="section-pricing">
+    <section id="pricing" className="container mx-auto px-4 py-24" data-testid="section-pricing">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -438,14 +437,10 @@ function PricingSection() {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
-          <span className="grad1">
-            Choose Your
-            <br />
-            Trading Plan
-          </span>
+        <h2 className="text-5xl md:text-6xl font-normal mb-6 clash-display text-white">
+          Choose Your <span className="grad1 clash-display">Trading Plan</span>
         </h2>
-        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
+        <p className="text-lg text-gray-400">
           Select the perfect trading plan with advanced features and competitive fees
         </p>
       </motion.div>
@@ -551,82 +546,77 @@ const testimonials = [
 
 function TestimonialsSection() {
   return (
-    <section id="testimonials" className="container mx-auto px-4 py-24 overflow-hidden" data-testid="section-testimonials">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-12"
-      >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
-          <span className="grad1">Trusted by Traders</span>
-        </h2>
-        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
-          Join thousands of satisfied traders on ForexTrade
-        </p>
-      </motion.div>
+    <section id="testimonials" className="py-20 overflow-hidden bg-black" data-testid="section-testimonials">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl font-normal mb-4 clash-display text-white">
+            Trusted by Traders
+          </h2>
+          <p className="text-zinc-400/90 text-lg">
+            Join thousands of satisfied traders on ForexTrade
+          </p>
+        </div>
+      </div>
 
-      <div
-        className="relative overflow-hidden"
-        onMouseEnter={(e) => {
-          const el = e.currentTarget;
-          el.style.setProperty("--marquee-play-state", "paused");
-        }}
-        onMouseLeave={(e) => {
-          const el = e.currentTarget;
-          el.style.setProperty("--marquee-play-state", "running");
-        }}
-      >
-        <div className="animate-marquee">
-          <div className="flex gap-6 shrink-0">
+      <div className="relative flex flex-col antialiased">
+        <div
+          className="relative flex overflow-hidden py-4"
+          style={{ ["--marquee-play-state" as string]: "running" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.setProperty("--marquee-play-state", "paused");
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.setProperty("--marquee-play-state", "running");
+          }}
+        >
+          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+                className="w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
                 data-testid={`testimonial-card-${i}`}
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-4 mb-6">
                   {t.avatar ? (
                     <div className="h-12 w-12 overflow-clip rounded-full">
                       <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white font-semibold">
+                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white text-xl">
                       {t.name[0]}
                     </div>
                   )}
                   <div>
-                    <h4 className="text-white font-semibold text-sm">{t.name}</h4>
-                    <p className="text-zinc-400 text-xs">{t.role}</p>
+                    <h4 className="font-medium text-lg clash-display text-white/90">{t.name}</h4>
+                    <p className="text-sm text-white/60">{t.role}</p>
                   </div>
                 </div>
-                <p className="text-zinc-300 text-sm leading-relaxed">{t.text}</p>
+                <p className="text-white/70 leading-relaxed text-sm">{t.text}</p>
               </div>
             ))}
           </div>
-          <div className="flex gap-6 shrink-0">
+          <div className="animate-marquee flex min-w-full shrink-0 items-stretch gap-8" style={{ animationPlayState: "var(--marquee-play-state)" }}>
             {testimonials.map((t, i) => (
               <div
                 key={`dup-${i}`}
-                className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+                className="w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-4 mb-6">
                   {t.avatar ? (
                     <div className="h-12 w-12 overflow-clip rounded-full">
                       <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white font-semibold">
+                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white text-xl">
                       {t.name[0]}
                     </div>
                   )}
                   <div>
-                    <h4 className="text-white font-semibold text-sm">{t.name}</h4>
-                    <p className="text-zinc-400 text-xs">{t.role}</p>
+                    <h4 className="font-medium text-lg clash-display text-white/90">{t.name}</h4>
+                    <p className="text-sm text-white/60">{t.role}</p>
                   </div>
                 </div>
-                <p className="text-zinc-300 text-sm leading-relaxed">{t.text}</p>
+                <p className="text-white/70 leading-relaxed text-sm">{t.text}</p>
               </div>
             ))}
           </div>
