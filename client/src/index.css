@@ -329,7 +329,7 @@
 }
 
 .animate-marquee {
-  animation: 20s linear infinite marquee;
+  animation: 45s linear infinite marquee;
   animation-play-state: var(--marquee-play-state, running);
   display: flex;
 }

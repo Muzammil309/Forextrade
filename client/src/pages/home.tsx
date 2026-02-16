@@ -93,7 +93,7 @@ function HeroSection() {
   const rotateX = useTransform(scrollYProgress, [0, 1], [30, 0]);
 
   return (
-    <section ref={targetRef} className="relative container mx-auto px-4 pt-40 pb-20" data-testid="section-hero">
+    <section ref={targetRef} className="relative container mx-auto px-4 pt-28 sm:pt-32 md:pt-40 pb-12 sm:pb-16 md:pb-20" data-testid="section-hero">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -110,7 +110,7 @@ function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1] mb-6 max-w-3xl clash-display"
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-tight leading-[1.1] mb-6 max-w-3xl clash-display"
       >
         <span className="grad1">Trade forex with</span>
         <br />
@@ -191,7 +191,7 @@ function PartnersSection() {
   const allLogos = [...partnerLogos, ...partnerLogos, ...partnerLogos];
 
   return (
-    <section className="w-full overflow-hidden cursor-pointer bg-[#050505] backdrop-blur-sm py-12 mt-20" data-testid="section-partners">
+    <section className="w-full overflow-hidden cursor-pointer bg-[#050505] backdrop-blur-sm py-8 sm:py-12 mt-12 sm:mt-20" data-testid="section-partners">
       <motion.div
         className="flex gap-12 items-center"
         initial={{ opacity: 0, x: 0 }}
@@ -267,7 +267,7 @@ function FeaturesSection() {
   }, []);
 
   return (
-    <section id="features" className="container mx-auto px-4 py-24" data-testid="section-features">
+    <section id="features" className="container mx-auto px-4 py-16 sm:py-20 md:py-24" data-testid="section-features">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -374,12 +374,12 @@ function GlowCard({ children, popular }: { children: React.ReactNode; popular?: 
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 ${
+      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col h-full ${
         popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
       }`}
     >
       <div className="absolute inset-0 pointer-events-none" style={glowStyle} />
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex flex-col h-full">{children}</div>
     </div>
   );
 }
@@ -429,7 +429,7 @@ const plans = [
 
 function PricingSection() {
   return (
-    <section id="pricing" className="container mx-auto px-4 py-24" data-testid="section-pricing">
+    <section id="pricing" className="container mx-auto px-4 py-16 sm:py-20 md:py-24" data-testid="section-pricing">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -437,7 +437,7 @@ function PricingSection() {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-5xl md:text-6xl font-normal mb-6 clash-display text-white">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-6 clash-display text-white">
           Choose Your <span className="grad1 clash-display">Trading Plan</span>
         </h2>
         <p className="text-lg text-gray-400">
@@ -445,7 +445,7 @@ function PricingSection() {
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         {plans.map((plan, i) => (
           <motion.div
             key={i}
@@ -453,9 +453,10 @@ function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: i * 0.1 }}
+            className="flex"
           >
             <GlowCard popular={plan.popular}>
-              <div className="p-6">
+              <div className="p-6 sm:p-8 flex flex-col h-full">
                 {plan.popular && (
                   <div className="mb-4">
                     <span className="text-xs font-medium bg-indigo-400/30 text-indigo-100 rounded-full px-3 py-1">
@@ -481,7 +482,7 @@ function PricingSection() {
                   <p className="text-zinc-400 text-sm">{plan.description}</p>
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8 flex-1">
                   {plan.features.map((feature, j) => (
                     <li key={j} className="flex items-center gap-3 text-sm text-zinc-300">
                       <Check className="w-4 h-4 text-indigo-400 flex-shrink-0" />
@@ -491,7 +492,7 @@ function PricingSection() {
                 </ul>
 
                 <button
-                  className="button-gradient w-full bg-indigo-500 py-4 text-white rounded-full text-lg clash-display cursor-pointer"
+                  className="button-gradient w-full bg-indigo-500 py-4 text-white rounded-full text-base sm:text-lg clash-display cursor-pointer mt-auto"
                   data-testid={`button-pricing-${i}`}
                 >
                   Start Trading
@@ -546,10 +547,10 @@ const testimonials = [
 
 function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-20 overflow-hidden bg-black" data-testid="section-testimonials">
+    <section id="testimonials" className="py-16 sm:py-20 overflow-hidden bg-black" data-testid="section-testimonials">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-normal mb-4 clash-display text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal mb-4 clash-display text-white">
             Trusted by Traders
           </h2>
           <p className="text-zinc-400/90 text-lg">
@@ -573,7 +574,7 @@ function TestimonialsSection() {
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+                className="w-[300px] sm:w-[350px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-6 sm:p-8 border-2 rounded-xl"
                 data-testid={`testimonial-card-${i}`}
               >
                 <div className="flex items-center gap-4 mb-6">
@@ -599,7 +600,7 @@ function TestimonialsSection() {
             {testimonials.map((t, i) => (
               <div
                 key={`dup-${i}`}
-                className="w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+                className="w-[300px] sm:w-[350px] md:w-[400px] shrink-0 cursor-pointer bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-6 sm:p-8 border-2 rounded-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
                   {t.avatar ? (
@@ -628,7 +629,7 @@ function TestimonialsSection() {
 
 function CTASection() {
   return (
-    <section id="cta" className="container mx-auto px-4 py-20 relative bg-black" data-testid="section-cta">
+    <section id="cta" className="container mx-auto px-4 py-16 sm:py-20 relative bg-black" data-testid="section-cta">
       <div
         className="absolute inset-0 opacity-40"
         style={{
@@ -638,7 +639,7 @@ function CTASection() {
           backgroundSize: "cover",
         }}
       />
-      <div className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 text-center relative z-10">
+      <div className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-6 sm:p-8 md:p-12 text-center relative z-10">
         <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
           <span className="grad1">Ready to start trading?</span>
         </h2>
@@ -665,11 +666,11 @@ const footerLinks = {
 
 function Footer() {
   return (
-    <footer className="w-full py-12 mt-20" data-testid="footer">
+    <footer className="w-full py-8 sm:py-12 mt-12 sm:mt-20" data-testid="footer">
       <div className="container mx-auto px-4">
-        <div className="bg-[#0A0A0A]/80 border border-white/10 rounded-xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
+        <div className="bg-[#0A0A0A]/80 border border-white/10 rounded-xl p-6 sm:p-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            <div className="col-span-2 sm:col-span-2 md:col-span-1">
               <a href="#" className="flex items-center gap-2 text-white mb-4">
                 <LayoutGrid className="w-5 h-5 text-indigo-400" />
                 <span className="clash-display text-base font-medium">ForexTrade</span>
