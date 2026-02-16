@@ -1,163 +1,181 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Check, ChevronRight, BarChart3, Wallet, Shield, TrendingUp, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Check, ChevronRight, BarChart3, Wallet, Shield, TrendingUp, LayoutGrid, Twitter, Github, Linkedin, Menu } from "lucide-react";
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+    setMobileOpen(false);
+  };
+
   return (
-    <nav
-      className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        scrolled ? "top-2" : "top-4"
+    <header
+      className={`fixed top-3.5 left-1/2 -translate-x-1/2 z-50 rounded-full flex items-center justify-between px-4 transition-all duration-300 ${
+        scrolled
+          ? "h-14 bg-[#1B1B1B]/40 backdrop-blur-xl border border-white/10 scale-95 w-[90%] max-w-2xl"
+          : "h-14 bg-[#1B1B1B] w-[95%] max-w-3xl"
       }`}
       data-testid="navbar"
     >
-      <div className="flex items-center gap-8 px-6 py-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl">
-        <a href="#" className="flex items-center gap-2 text-white font-semibold text-sm tracking-tight" data-testid="link-logo">
-          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 2h4v4H2V2zm6 0h4v4H8V2zM2 8h4v4H2V8zm6 3h4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span style={{ fontFamily: "var(--font-heading)" }}>ForexTrade</span>
-        </a>
-        <div className="hidden md:flex items-center gap-6">
-          <a href="#features" className="text-sm text-gray-400 transition-colors" data-testid="link-features">Features</a>
-          <a href="#pricing" className="text-sm text-gray-400 transition-colors" data-testid="link-prices">Prices</a>
-          <a href="#testimonials" className="text-sm text-gray-400 transition-colors" data-testid="link-testimonials">Testimonials</a>
+      <a href="#" className="flex items-center gap-2 text-white" data-testid="link-logo">
+        <LayoutGrid className="w-5 h-5 text-indigo-400" />
+        <span className="clash-display text-base font-medium">ForexTrade</span>
+      </a>
+
+      <nav className="hidden md:flex items-center gap-6">
+        {["Features", "Prices", "Testimonials"].map((item) => (
+          <button
+            key={item}
+            onClick={() => scrollTo(item.toLowerCase())}
+            className="text-sm text-zinc-400 hover:-translate-y-1 ease-out transition-all duration-200 cursor-pointer"
+            data-testid={`link-${item.toLowerCase()}`}
+          >
+            {item}
+          </button>
+        ))}
+      </nav>
+
+      <button
+        onClick={() => scrollTo("cta")}
+        className="hidden md:block button-gradient clash-display text-base bg-gradient-to-r from-indigo-400 to-indigo-600 px-4 py-2 rounded-full cursor-pointer hover:-translate-y-0.5 duration-200 transition-all ease-out hover:shadow-xl hover:shadow-indigo-900"
+        data-testid="link-start-trading"
+      >
+        Start Trading
+      </button>
+
+      <button
+        className="md:hidden text-white"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        data-testid="button-mobile-menu"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {mobileOpen && (
+        <div className="absolute top-16 left-0 right-0 bg-[#1B1B1B] border border-white/10 rounded-xl p-4 flex flex-col gap-3 md:hidden">
+          {["Features", "Prices", "Testimonials"].map((item) => (
+            <button
+              key={item}
+              onClick={() => scrollTo(item.toLowerCase())}
+              className="text-sm text-zinc-400 text-left py-2"
+            >
+              {item}
+            </button>
+          ))}
+          <button
+            onClick={() => scrollTo("cta")}
+            className="button-gradient clash-display text-base rounded-full py-2 px-4 cursor-pointer"
+          >
+            Start Trading
+          </button>
         </div>
-        <Button asChild className="rounded-full">
-          <a href="#cta" data-testid="link-start-trading">Start Trading</a>
-        </Button>
-      </div>
-    </nav>
+      )}
+    </header>
   );
 }
 
-function useScrollTilt() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rotateX: 12, scale: 0.95 });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const elementCenter = rect.top + rect.height / 2;
-      const viewportCenter = windowHeight / 2;
-      const progress = Math.max(0, Math.min(1, 1 - (elementCenter - viewportCenter) / windowHeight));
-      const rotateX = 12 - progress * 14;
-      const scale = 0.95 + progress * 0.05;
-      setTilt({ rotateX, scale });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return { ref, tilt };
-}
-
 function HeroSection() {
-  const { ref: tiltRef, tilt } = useScrollTilt();
+  const targetRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "center center"],
+  });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [30, 0]);
 
   return (
-    <section className="relative pt-32 pb-8 px-4 md:px-8 lg:px-16 overflow-hidden" data-testid="section-hero">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 rounded-full blur-[120px] opacity-40" />
-        <div className="absolute top-20 left-1/4 w-[400px] h-[400px] bg-purple-600/8 rounded-full blur-[100px]" />
-      </div>
+    <section className="relative container mx-auto px-4 pt-40 pb-20" data-testid="section-hero">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-6"
+      >
+        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-zinc-400">
+          <LayoutGrid className="w-4 h-4 text-indigo-400" />
+          Next-gen forex trading platform
+        </span>
+      </motion.div>
 
-      <div className="relative max-w-6xl mx-auto">
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1] mb-6 max-w-3xl clash-display"
+      >
+        <span className="grad1">Trade forex with</span>
+        <br />
+        <span className="text-white font-medium">confidence & security</span>
+      </motion.h1>
+
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="text-base md:text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed"
+      >
+        Experience seamless forex trading with advanced features, real-time
+        analytics, and institutional-grade security.{" "}
+        <span className="text-white font-medium">Start trading in minutes.</span>
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="flex items-center gap-4 flex-wrap"
+      >
+        <button
+          onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
+          className="bg-indigo-500 text-white px-6 py-3 rounded-full text-base clash-display cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+          data-testid="button-start-trading-hero"
+        >
+          Start Trading Now
+        </button>
+        <button
+          onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
+          className="glass rounded-full px-6 py-3 text-base text-white flex items-center gap-2 cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+          data-testid="button-view-markets"
+        >
+          View Markets
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="mt-16 relative"
+        style={{ perspective: 600 }}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-6"
+          ref={targetRef}
+          className="glass rounded-xl overflow-hidden"
+          style={{ rotateX, transformStyle: "preserve-3d" }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm text-gray-400">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-primary">
-              <path d="M4 4h3v3H4V4zm5 0h3v3H9V4zM4 9h3v3H4V9zm5 2h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-            </svg>
-            Next-gen forex trading platform
-          </span>
+          <img
+            src="/images/chart2.png"
+            alt="Trade Dashboard"
+            className="w-full h-auto hidden lg:block"
+            data-testid="img-dashboard"
+          />
+          <img
+            src="/images/chart2.png"
+            alt="Trade Dashboard"
+            className="w-full h-auto block lg:hidden"
+          />
         </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 max-w-3xl"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Trade forex with{" "}
-          <br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-primary to-purple-300">
-            confidence & security
-          </span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base md:text-lg text-gray-400 max-w-xl mb-8 leading-relaxed"
-        >
-          Experience seamless forex trading with advanced features, real-time
-          analytics, and institutional-grade security.{" "}
-          <span className="text-white font-medium">Start trading in minutes.</span>
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex items-center gap-4 flex-wrap"
-        >
-          <Button asChild size="lg" className="rounded-full">
-            <a href="#cta" data-testid="button-start-trading-hero">Start Trading Now</a>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-full">
-            <a href="#features" data-testid="button-view-markets">
-              View Markets
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </Button>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-16 relative"
-          style={{ perspective: "1200px" }}
-        >
-          <div className="absolute -inset-4 bg-gradient-to-t from-black via-transparent to-transparent z-10 pointer-events-none" />
-          <div
-            ref={tiltRef}
-            className="relative rounded-xl overflow-hidden border border-white/10 bg-white/5 transition-transform duration-100 ease-out will-change-transform"
-            style={{
-              transform: `rotateX(${tilt.rotateX}deg) scale(${tilt.scale})`,
-              transformOrigin: "center bottom",
-            }}
-          >
-            <img
-              src="/images/chart2.png"
-              alt="Trade Dashboard"
-              className="w-full h-auto"
-              data-testid="img-dashboard"
-            />
-          </div>
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -174,138 +192,196 @@ function PartnersSection() {
   const allLogos = [...partnerLogos, ...partnerLogos, ...partnerLogos];
 
   return (
-    <section className="py-16 overflow-hidden border-t border-white/5" data-testid="section-partners">
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
-        <div className="flex animate-scroll-left" style={{ width: "max-content" }}>
-          {allLogos.map((logo, i) => (
-            <div key={i} className="flex items-center justify-center px-8 md:px-12">
-              <img
-                src={logo}
-                alt={`Partner logo ${(i % 5) + 1}`}
-                className="h-8 md:h-10 opacity-50 grayscale transition-opacity"
-                data-testid={`img-partner-${i}`}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+    <section className="w-full overflow-hidden cursor-pointer bg-[#050505] backdrop-blur-sm py-12 mt-20" data-testid="section-partners">
+      <motion.div
+        className="flex gap-12 items-center"
+        initial={{ opacity: 0, x: 0 }}
+        animate={{ opacity: 1, x: "-50%" }}
+        transition={{
+          opacity: { duration: 0.5 },
+          x: { duration: 15, repeat: Infinity, ease: "linear", delay: 0.5 },
+        }}
+      >
+        {allLogos.map((logo, i) => (
+          <motion.img
+            key={i}
+            src={logo}
+            alt={`Partner ${(i % 5) + 1}`}
+            className="h-8 object-contain"
+            initial={{ opacity: 0.5 }}
+            whileHover={{ opacity: 1, scale: 1.05 }}
+            data-testid={`img-partner-${i}`}
+          />
+        ))}
+      </motion.div>
     </section>
   );
 }
-
-const featureImages = [
-  "/images/fit1.png",
-  "/images/fit2.png",
-  "/images/fit3.png",
-  "/images/fit4.png",
-];
 
 const features = [
   {
     icon: BarChart3,
     title: "Advanced Trading Interface",
     description: "Professional-grade trading tools with real-time market data and advanced charting capabilities.",
+    image: "/images/fit1.png",
   },
   {
     icon: Wallet,
     title: "Portfolio Management",
     description: "Track your investments and monitor your gains with our comprehensive portfolio dashboard.",
+    image: "/images/fit3.png",
   },
   {
     icon: Shield,
     title: "Security & Verification",
     description: "Industry-leading security measures with KYC verification process to protect your assets.",
+    image: "/images/fit4.png",
   },
   {
     icon: TrendingUp,
     title: "Performance Analytics",
     description: "Detailed analytics and credit scoring system to help you make informed decisions.",
+    image: "/images/fit2.png",
   },
 ];
 
 function FeaturesSection() {
   const [activeFeature, setActiveFeature] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoRotation = () => {
+    intervalRef.current = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % features.length);
+    }, 3000);
+  };
+
+  const stopAutoRotation = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    startAutoRotation();
+    return () => stopAutoRotation();
+  }, []);
 
   return (
-    <section id="features" className="py-24 px-4 md:px-8 lg:px-16" data-testid="section-features">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Advanced Trading{" "}
-            <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-primary">
-              Features & Tools
-            </span>
-          </h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-            Experience professional-grade trading tools and features designed for both novice and experienced crypto traders.
-          </p>
-        </motion.div>
+    <section id="features" className="container mx-auto px-4 py-24" data-testid="section-features">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-16"
+      >
+        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
+          <span className="grad1">
+            Advanced Trading
+            <br />
+            Features & Tools
+          </span>
+        </h2>
+        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
+          Experience professional-grade trading tools and features designed for both novice and experienced crypto traders.
+        </p>
+      </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-3">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className={`p-5 rounded-xl cursor-pointer transition-all duration-300 ${
-                  activeFeature === i
-                    ? "bg-white/5 border border-white/10"
-                    : "border border-transparent"
-                }`}
-                onClick={() => setActiveFeature(i)}
-                data-testid={`feature-card-${i}`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    activeFeature === i ? "bg-primary/20 text-primary" : "bg-white/5 text-gray-400"
-                  }`}>
-                    <feature.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-base mb-1">{feature.title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
-                  </div>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+        <div className="md:col-span-5 space-y-3">
+          {features.map((feature, i) => (
+            <div
+              key={i}
+              className={`p-5 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+                activeFeature === i
+                  ? "border-indigo-400/40 bg-indigo-500/10"
+                  : "border-transparent"
+              }`}
+              onClick={() => {
+                stopAutoRotation();
+                setActiveFeature(i);
+                startAutoRotation();
+              }}
+              onMouseEnter={() => {
+                stopAutoRotation();
+                setActiveFeature(i);
+              }}
+              onMouseLeave={() => {
+                startAutoRotation();
+              }}
+              data-testid={`feature-card-${i}`}
+            >
+              <div className="flex items-start gap-4">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                  activeFeature === i ? "bg-indigo-500/20 text-indigo-400" : "bg-white/5 text-zinc-400"
+                }`}>
+                  <feature.icon className="w-5 h-5" />
                 </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-purple-600/10 rounded-2xl blur-xl opacity-50" />
-            <div className="relative rounded-xl overflow-hidden border border-white/10">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={activeFeature}
-                  src={featureImages[activeFeature]}
-                  alt={features[activeFeature].title}
-                  className="w-full h-auto"
-                  data-testid="img-features"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                />
-              </AnimatePresence>
+                <div>
+                  <h3 className="text-white font-semibold text-base mb-1">{feature.title}</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{feature.description}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+
+        <div className="md:col-span-7 min-h-[320px] relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeFeature}
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="glass rounded-xl overflow-hidden w-full relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-transparent opacity-20" />
+              <img
+                src={features[activeFeature].image}
+                alt={features[activeFeature].title}
+                className="w-full h-auto relative z-10"
+                data-testid="img-features"
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
+  );
+}
+
+function GlowCard({ children, popular }: { children: React.ReactNode; popular?: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [glowStyle, setGlowStyle] = useState<React.CSSProperties>({});
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setGlowStyle({
+      background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,.06), transparent 40%)`,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setGlowStyle({});
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 ${
+        popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
+      }`}
+    >
+      <div className="absolute inset-0 pointer-events-none" style={glowStyle} />
+      <div className="relative z-10">{children}</div>
+    </div>
   );
 }
 
@@ -317,6 +393,7 @@ const plans = [
     description: "Perfect for beginners starting their crypto journey",
     features: ["Basic spot trading", "Market & limit orders", "Basic market analysis", "Email support"],
     popular: false,
+    nameGradient: false,
   },
   {
     name: "Pro Trader",
@@ -331,6 +408,7 @@ const plans = [
       "API access",
     ],
     popular: true,
+    nameGradient: true,
   },
   {
     name: "Institutional",
@@ -346,84 +424,87 @@ const plans = [
       "24/7 priority support",
     ],
     popular: false,
+    nameGradient: false,
   },
 ];
 
 function PricingSection() {
   return (
-    <section id="pricing" className="py-24 px-4 md:px-8 lg:px-16" data-testid="section-pricing">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
-            style={{ fontFamily: "var(--font-heading)" }}
+    <section id="prices" className="container mx-auto px-4 py-24" data-testid="section-pricing">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-16"
+      >
+        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
+          <span className="grad1">
+            Choose Your
+            <br />
+            Trading Plan
+          </span>
+        </h2>
+        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
+          Select the perfect trading plan with advanced features and competitive fees
+        </p>
+      </motion.div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        {plans.map((plan, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
           >
-            Choose Your Trading Plan
-          </h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-            Select the perfect trading plan with advanced features and competitive fees
-          </p>
-        </motion.div>
+            <GlowCard popular={plan.popular}>
+              <div className="p-6">
+                {plan.popular && (
+                  <div className="mb-4">
+                    <span className="text-xs font-medium bg-indigo-400/30 text-indigo-100 rounded-full px-3 py-1">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className={`relative p-6 rounded-xl border transition-all ${
-                plan.popular
-                  ? "bg-white/[0.06] border-primary/40"
-                  : "bg-white/[0.03] border-white/10"
-              }`}
-              data-testid={`pricing-card-${i}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-primary text-white text-xs font-medium">
-                    Most Popular
-                  </span>
+                <div className="mb-6">
+                  <h3
+                    className={`font-semibold text-lg mb-2 clash-display ${
+                      plan.nameGradient
+                        ? "bg-gradient-to-r from-emerald-200 to-emerald-800 bg-clip-text text-transparent"
+                        : "text-white"
+                    }`}
+                  >
+                    {plan.name}
+                  </h3>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-4xl font-bold clash-display text-indigo-300">{plan.price}</span>
+                    {plan.period && <span className="text-zinc-400 text-sm">{plan.period}</span>}
+                  </div>
+                  <p className="text-zinc-400 text-sm">{plan.description}</p>
                 </div>
-              )}
 
-              <div className="mb-6">
-                <h3 className="text-white font-semibold text-lg mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-                  {plan.name}
-                </h3>
-                <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-3xl font-bold text-white">{plan.price}</span>
-                  {plan.period && <span className="text-gray-400 text-sm">{plan.period}</span>}
-                </div>
-                <p className="text-gray-400 text-sm">{plan.description}</p>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, j) => (
+                    <li key={j} className="flex items-center gap-3 text-sm text-zinc-300">
+                      <Check className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className="button-gradient w-full bg-indigo-500 py-4 text-white rounded-full text-lg clash-display cursor-pointer"
+                  data-testid={`button-pricing-${i}`}
+                >
+                  Start Trading
+                </button>
               </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature, j) => (
-                  <li key={j} className="flex items-center gap-3 text-sm text-gray-300">
-                    <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                asChild
-                variant={plan.popular ? "default" : "outline"}
-                className="w-full rounded-full"
-              >
-                <a href="#cta" data-testid={`button-pricing-${i}`}>Start Trading</a>
-              </Button>
-            </motion.div>
-          ))}
-        </div>
+            </GlowCard>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
@@ -440,7 +521,6 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Crypto Fund Manager",
     avatar: null,
-    initial: "S",
     text: "ForexTrade's institutional-grade tools have transformed our trading strategy. The API integration and automated features have saved us countless hours.",
   },
   {
@@ -470,138 +550,182 @@ const testimonials = [
 ];
 
 function TestimonialsSection() {
-  const doubled = [...testimonials, ...testimonials];
-
   return (
-    <section id="testimonials" className="py-24 overflow-hidden" data-testid="section-testimonials">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-16 mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Trusted by Traders
-          </h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-            Join thousands of satisfied traders on ForexTrade
-          </p>
-        </motion.div>
-      </div>
+    <section id="testimonials" className="container mx-auto px-4 py-24 overflow-hidden" data-testid="section-testimonials">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12"
+      >
+        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
+          <span className="grad1">Trusted by Traders</span>
+        </h2>
+        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
+          Join thousands of satisfied traders on ForexTrade
+        </p>
+      </motion.div>
 
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
-        <div className="flex animate-scroll-testimonials" style={{ width: "max-content" }}>
-          {doubled.map((t, i) => (
-            <div
-              key={i}
-              className="w-[350px] flex-shrink-0 mx-3 p-6 rounded-xl bg-white/[0.03] border border-white/10"
-              data-testid={`testimonial-card-${i}`}
-            >
-              <div className="flex items-center gap-3 mb-4">
-                {t.avatar ? (
-                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-semibold text-sm">
-                    {t.initial}
+      <div
+        className="relative overflow-hidden"
+        onMouseEnter={(e) => {
+          const el = e.currentTarget;
+          el.style.setProperty("--marquee-play-state", "paused");
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget;
+          el.style.setProperty("--marquee-play-state", "running");
+        }}
+      >
+        <div className="animate-marquee">
+          <div className="flex gap-6 shrink-0">
+            {testimonials.map((t, i) => (
+              <div
+                key={i}
+                className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+                data-testid={`testimonial-card-${i}`}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  {t.avatar ? (
+                    <div className="h-12 w-12 overflow-clip rounded-full">
+                      <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white font-semibold">
+                      {t.name[0]}
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-white font-semibold text-sm">{t.name}</h4>
+                    <p className="text-zinc-400 text-xs">{t.role}</p>
                   </div>
-                )}
-                <div>
-                  <h4 className="text-white font-semibold text-sm">{t.name}</h4>
-                  <p className="text-gray-400 text-xs">{t.role}</p>
                 </div>
+                <p className="text-zinc-300 text-sm leading-relaxed">{t.text}</p>
               </div>
-              <div className="flex gap-0.5 mb-3">
-                {[...Array(5)].map((_, j) => (
-                  <Star key={j} className="w-3.5 h-3.5 fill-yellow-500 text-yellow-500" />
-                ))}
+            ))}
+          </div>
+          <div className="flex gap-6 shrink-0">
+            {testimonials.map((t, i) => (
+              <div
+                key={`dup-${i}`}
+                className="w-[400px] shrink-0 bg-black/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-300 p-8 border-2 rounded-xl"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  {t.avatar ? (
+                    <div className="h-12 w-12 overflow-clip rounded-full">
+                      <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 overflow-clip rounded-full bg-pink-500 flex items-center justify-center text-white font-semibold">
+                      {t.name[0]}
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-white font-semibold text-sm">{t.name}</h4>
+                    <p className="text-zinc-400 text-xs">{t.role}</p>
+                  </div>
+                </div>
+                <p className="text-zinc-300 text-sm leading-relaxed">{t.text}</p>
               </div>
-              <p className="text-gray-300 text-sm leading-relaxed">{t.text}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function GridBackground() {
-  return (
-    <svg
-      className="absolute inset-0 w-full h-full opacity-[0.07]"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <pattern id="cta-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#cta-grid)" />
-    </svg>
   );
 }
 
 function CTASection() {
   return (
-    <section id="cta" className="py-24 px-4 md:px-8 lg:px-16" data-testid="section-cta">
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative"
+    <section id="cta" className="container mx-auto px-4 py-20 relative bg-black" data-testid="section-cta">
+      <div
+        className="absolute inset-0 opacity-40"
+        style={{
+          backgroundImage: "url('/images/crack.png')",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      />
+      <div className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 text-center relative z-10">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl tracking-tight mb-4 clash-display">
+          <span className="grad1">Ready to start trading?</span>
+        </h2>
+        <p className="text-zinc-400 text-base md:text-lg mb-8 max-w-lg mx-auto">
+          Join thousands of traders who have already discovered the power of our platform.
+        </p>
+        <button
+          className="button-gradient flex items-center mx-auto text-lg bg-gradient-to-r from-indigo-400 to-indigo-500 clash-display hover:-translate-y-1 transition2 text-white py-3 rounded-full px-5 cursor-pointer"
+          data-testid="button-create-account"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-purple-600/10 to-primary/10 rounded-2xl blur-xl" />
-          <div className="relative rounded-2xl border border-white/10 overflow-hidden">
-            <GridBackground />
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/10 rounded-full blur-[100px] opacity-60" />
-            <div className="relative z-10 p-12 md:p-16">
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                Ready to start trading?
-              </h2>
-              <p className="text-gray-400 text-base md:text-lg mb-8 max-w-lg mx-auto">
-                Join thousands of traders who have already discovered the power of our platform.
-              </p>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
-                <a href="#" data-testid="button-create-account">
-                  Create Account
-                  <ChevronRight className="w-4 h-4" />
-                </a>
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+          Create Account
+          <ChevronRight className="w-5 h-5 ml-1" />
+        </button>
       </div>
     </section>
   );
 }
 
+const footerLinks = {
+  Trading: ["Markets", "Trading Fees"],
+  Resources: ["Trading Guide", "Market Analysis"],
+  Legal: ["Privacy Policy", "Terms of Services"],
+};
+
 function Footer() {
   return (
-    <footer className="py-8 px-4 md:px-8 lg:px-16 border-t border-white/5" data-testid="footer">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-white font-semibold text-sm">
-          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 2h4v4H2V2zm6 0h4v4H8V2zM2 8h4v4H2V8zm6 3h4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+    <footer className="w-full py-12 mt-20" data-testid="footer">
+      <div className="container mx-auto px-4">
+        <div className="bg-[#0A0A0A]/80 border border-white/10 rounded-xl p-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <a href="#" className="flex items-center gap-2 text-white mb-4">
+                <LayoutGrid className="w-5 h-5 text-indigo-400" />
+                <span className="clash-display text-base font-medium">ForexTrade</span>
+              </a>
+              <p className="text-zinc-400 text-sm mb-4">
+                Next-generation forex trading platform with advanced features.
+              </p>
+              <div className="flex items-center gap-3">
+                <a href="#" className="text-zinc-400 hover:text-indigo-300 transition2" data-testid="link-twitter">
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a href="#" className="text-zinc-400 hover:text-indigo-300 transition2" data-testid="link-github">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href="#" className="text-zinc-400 hover:text-indigo-300 transition2" data-testid="link-linkedin">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
+
+            {Object.entries(footerLinks).map(([category, links]) => (
+              <div key={category}>
+                <h4 className="text-white font-semibold text-sm mb-4">{category}</h4>
+                <ul className="space-y-2">
+                  {links.map((link) => (
+                    <li key={link}>
+                      <a
+                        href="#"
+                        className="text-zinc-400 text-sm hover:text-indigo-300 hover:ml-3 transition2"
+                        data-testid={`link-footer-${link.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-          <span style={{ fontFamily: "var(--font-heading)" }}>ForexTrade</span>
+
+          <div className="border-t border-white/10 mt-8 pt-6">
+            <p className="text-zinc-500 text-xs text-center">
+              &copy; {new Date().getFullYear()} Footprint Arts. All rights reserved.
+            </p>
+          </div>
         </div>
-        <p className="text-gray-500 text-xs">
-          &copy; {new Date().getFullYear()} ForexTrade. All rights reserved.
-        </p>
       </div>
     </footer>
   );
@@ -609,7 +733,7 @@ function Footer() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="text-zinc-100 bg-black min-w-full min-h-screen overflow-x-hidden">
       <Navbar />
       <HeroSection />
       <PartnersSection />

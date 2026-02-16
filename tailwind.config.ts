@@ -104,6 +104,10 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        marquee: {
+          "0%": { transform: "translate(0)" },
+          "100%": { transform: "translate(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

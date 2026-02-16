@@ -287,3 +287,49 @@
     inset: -1px;
   }
 }
+
+@font-face {
+  font-family: clash01;
+  src: url('/fonts/CLASHDISPLAY-MEDIUM.OTF');
+}
+
+.clash-display {
+  font-family: clash01, sans-serif !important;
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(10, 10, 10, 0.8);
+}
+
+.grad1 {
+  background: linear-gradient(to top right in oklab, var(--tw-gradient-stops));
+  --tw-gradient-from: #e0e7ff;
+  --tw-gradient-to: #818cf8;
+  background-image: linear-gradient(to top right, #e0e7ff, #818cf8);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.button-gradient {
+  background: linear-gradient(to right, #818cf8, #6366f1);
+  color: white;
+  border: none;
+}
+
+.transition2 {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes marquee {
+  0% { transform: translate(0); }
+  100% { transform: translate(-100%); }
+}
+
+.animate-marquee {
+  animation: 20s linear infinite marquee;
+  animation-play-state: var(--marquee-play-state, running);
+  display: flex;
+}
