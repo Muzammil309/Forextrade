@@ -184,13 +184,13 @@ function HeroSection() {
           style={{ rotateX, transformStyle: "preserve-3d" }}
         >
           <img
-            src="/images/chart2.png"
+            src={`${import.meta.env.BASE_URL}images/chart2.png`}
             alt="Trade Dashboard"
             className="w-full h-auto hidden lg:block"
             data-testid="img-dashboard"
           />
           <img
-            src="/images/chart2.png"
+            src={`${import.meta.env.BASE_URL}images/chart2.png`}
             alt="Trade Dashboard"
             className="w-full h-auto block lg:hidden"
           />
@@ -201,11 +201,11 @@ function HeroSection() {
 }
 
 const partnerLogos = [
-  "/images/log1.png",
-  "/images/log2.png",
-  "/images/log3.png",
-  "/images/log4.png",
-  "/images/log5.png",
+  `${import.meta.env.BASE_URL}images/log1.png`,
+  `${import.meta.env.BASE_URL}images/log2.png`,
+  `${import.meta.env.BASE_URL}images/log3.png`,
+  `${import.meta.env.BASE_URL}images/log4.png`,
+  `${import.meta.env.BASE_URL}images/log5.png`,
 ];
 
 function PartnersSection() {
@@ -243,25 +243,25 @@ const features = [
     icon: BarChart3,
     title: "Advanced Trading Interface",
     description: "Professional-grade trading tools with real-time market data and advanced charting capabilities.",
-    image: "/images/fit1.png",
+    image: `${import.meta.env.BASE_URL}images/fit1.png`,
   },
   {
     icon: Wallet,
     title: "Portfolio Management",
     description: "Track your investments and monitor your gains with our comprehensive portfolio dashboard.",
-    image: "/images/fit3.png",
+    image: `${import.meta.env.BASE_URL}images/fit3.png`,
   },
   {
     icon: Shield,
     title: "Security & Verification",
     description: "Industry-leading security measures with KYC verification process to protect your assets.",
-    image: "/images/fit4.png",
+    image: `${import.meta.env.BASE_URL}images/fit4.png`,
   },
   {
     icon: TrendingUp,
     title: "Performance Analytics",
     description: "Detailed analytics and credit scoring system to help you make informed decisions.",
-    image: "/images/fit2.png",
+    image: `${import.meta.env.BASE_URL}images/fit2.png`,
   },
 ];
 
@@ -529,7 +529,7 @@ const testimonials = [
   {
     name: "Michael Chen",
     role: "Professional Trader",
-    avatar: "/images/av1.png",
+    avatar: `${import.meta.env.BASE_URL}images/av1.png`,
     text: "The real-time market data and advanced trading features have significantly improved my trading performance. The platform's security measures give me peace of mind.",
   },
   {
@@ -541,25 +541,25 @@ const testimonials = [
   {
     name: "David Wilson",
     role: "Early Forex Investor",
-    avatar: "/images/av2.png",
+    avatar: `${import.meta.env.BASE_URL}images/av2.png`,
     text: "The customer support is exceptional, and the platform's intuitive design made getting started with crypto trading seamless. A game-changer for both beginners and pros.",
   },
   {
     name: "Emily Zhang",
     role: "DeFi Developer",
-    avatar: "/images/av4.png",
+    avatar: `${import.meta.env.BASE_URL}images/av4.png`,
     text: "We've seen remarkable improvements in our trading efficiency since switching to ForexTrade. The smart order routing and liquidity aggregation are particularly impressive.",
   },
   {
     name: "James Rodriguez",
     role: "Forex Security Expert",
-    avatar: "/images/av3.png",
+    avatar: `${import.meta.env.BASE_URL}images/av3.png`,
     text: "The security features are robust and the regular updates keep us ahead of emerging threats. It's exactly what the Forex industry needed.",
   },
   {
     name: "Lisa Thompson",
     role: "Portfolio Manager",
-    avatar: "/images/av1.png",
+    avatar: `${import.meta.env.BASE_URL}images/av1.png`,
     text: "The platform's ability to handle complex trading strategies while maintaining simplicity in its interface is remarkable. It's been invaluable for our portfolio management.",
   },
 ];
@@ -652,7 +652,7 @@ function CTASection() {
       <div
         className="absolute inset-0 opacity-40"
         style={{
-          backgroundImage: "url('/images/crack.png')",
+          backgroundImage: `url('${import.meta.env.BASE_URL}images/crack.png')`,
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
