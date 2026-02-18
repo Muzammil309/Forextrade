@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Check, ChevronRight, BarChart3, Wallet, Shield, TrendingUp, LayoutGrid, Twitter, Github, Linkedin, Menu } from "lucide-react";
+import { SplineScene } from "@/components/ui/spline-scene";
+
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,11 +22,10 @@ function Navbar() {
 
   return (
     <header
-      className={`fixed top-3.5 left-1/2 -translate-x-1/2 z-50 rounded-full flex items-center justify-between px-4 transition-all duration-300 ${
-        scrolled
-          ? "h-14 bg-[#1B1B1B]/40 backdrop-blur-xl border border-white/10 scale-95 w-[90%] max-w-2xl"
-          : "h-14 bg-[#1B1B1B] w-[95%] max-w-3xl"
-      }`}
+      className={`fixed top-3.5 left-1/2 -translate-x-1/2 z-50 rounded-full flex items-center justify-between px-4 transition-all duration-300 ${scrolled
+        ? "h-14 bg-[#1B1B1B]/40 backdrop-blur-xl border border-white/10 scale-95 w-[90%] max-w-2xl"
+        : "h-14 bg-[#1B1B1B] w-[95%] max-w-3xl"
+        }`}
       data-testid="navbar"
     >
       <a href="#" className="flex items-center gap-2 text-white" data-testid="link-logo">
@@ -94,63 +95,83 @@ function HeroSection() {
 
   return (
     <section ref={targetRef} className="relative container mx-auto px-4 pt-28 sm:pt-32 md:pt-40 pb-12 sm:pb-16 md:pb-20" data-testid="section-hero">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-6"
-      >
-        <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-zinc-400">
-          <LayoutGrid className="w-4 h-4 text-indigo-400" />
-          Next-gen forex trading platform
-        </span>
-      </motion.div>
+      {/* Top row: Text (left) + Spline 3D (right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        {/* Left — Text & CTAs */}
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6"
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-zinc-400">
+              <LayoutGrid className="w-4 h-4 text-indigo-400" />
+              Next-gen forex trading platform
+            </span>
+          </motion.div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl tracking-tight leading-[1.1] mb-6 max-w-3xl clash-display"
-      >
-        <span className="grad1">Trade forex with</span>
-        <br />
-        <span className="text-white font-medium">confidence & security</span>
-      </motion.h1>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight leading-[1.1] mb-6 clash-display"
+          >
+            <span className="grad1">Trade forex with</span>
+            <br />
+            <span className="text-white font-medium">confidence & security</span>
+          </motion.h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="text-sm sm:text-base md:text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed"
-      >
-        Experience seamless forex trading with advanced features, real-time
-        analytics, and institutional-grade security.{" "}
-        <span className="text-white font-medium">Start trading in minutes.</span>
-      </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-sm sm:text-base md:text-lg text-zinc-400 max-w-xl mb-8 leading-relaxed"
+          >
+            Experience seamless forex trading with advanced features, real-time
+            analytics, and institutional-grade security.{" "}
+            <span className="text-white font-medium">Start trading in minutes.</span>
+          </motion.p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex items-center gap-3 sm:gap-4 flex-wrap"
-      >
-        <button
-          onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
-          className="bg-indigo-500 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base clash-display cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
-          data-testid="button-start-trading-hero"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex items-center gap-3 sm:gap-4 flex-wrap"
+          >
+            <button
+              onClick={() => document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" })}
+              className="bg-indigo-500 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base clash-display cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+              data-testid="button-start-trading-hero"
+            >
+              Start Trading Now
+            </button>
+            <button
+              onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
+              className="glass rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-white flex items-center gap-2 cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
+              data-testid="button-view-markets"
+            >
+              View Markets
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Right — Spline 3D Scene */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl overflow-hidden"
         >
-          Start Trading Now
-        </button>
-        <button
-          onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
-          className="glass rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-white flex items-center gap-2 cursor-pointer hover:-translate-y-0.5 transition-all duration-200"
-          data-testid="button-view-markets"
-        >
-          View Markets
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </motion.div>
+          <SplineScene
+            scene="https://prod.spline.design/Ym6BgzFUMpFPbdmh/scene.splinecode"
+            className="w-full h-full"
+          />
+        </motion.div>
+      </div>
 
+      {/* Chart image with 3D tilt — unchanged */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -287,16 +308,16 @@ function FeaturesSection() {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-        <div className="lg:col-span-5 space-y-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 lg:items-stretch">
+        {/* Left: feature cards — equal height to image panel */}
+        <div className="lg:col-span-5 flex flex-col justify-between gap-3">
           {features.map((feature, i) => (
             <div
               key={i}
-              className={`p-5 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
-                activeFeature === i
-                  ? "border-indigo-400/40 bg-indigo-500/10"
-                  : "border-transparent"
-              }`}
+              className={`flex-1 p-5 rounded-xl cursor-pointer transition-all duration-300 border-2 ${activeFeature === i
+                ? "border-indigo-400/40 bg-indigo-500/10"
+                : "border-transparent hover:bg-white/5"
+                }`}
               onClick={() => {
                 stopAutoRotation();
                 setActiveFeature(i);
@@ -311,10 +332,9 @@ function FeaturesSection() {
               }}
               data-testid={`feature-card-${i}`}
             >
-              <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  activeFeature === i ? "bg-indigo-500/20 text-indigo-400" : "bg-white/5 text-zinc-400"
-                }`}>
+              <div className="flex items-start gap-4 h-full">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${activeFeature === i ? "bg-indigo-500/20 text-indigo-400" : "bg-white/5 text-zinc-400"
+                  }`}>
                   <feature.icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -326,7 +346,8 @@ function FeaturesSection() {
           ))}
         </div>
 
-        <div className="lg:col-span-7 min-h-[250px] sm:min-h-[320px] relative">
+        {/* Right: image panel — stretches to match card column height */}
+        <div className="lg:col-span-7 relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFeature}
@@ -334,13 +355,13 @@ function FeaturesSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -60 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="glass rounded-xl overflow-hidden w-full relative"
+              className="glass rounded-xl overflow-hidden w-full h-full relative"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-transparent opacity-20" />
               <img
                 src={features[activeFeature].image}
                 alt={features[activeFeature].title}
-                className="w-full h-auto relative z-10"
+                className="w-full h-full object-cover relative z-10"
                 data-testid="img-features"
               />
             </motion.div>
@@ -374,9 +395,8 @@ function GlowCard({ children, popular }: { children: React.ReactNode; popular?: 
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col h-full ${
-        popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
-      }`}
+      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col h-full ${popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
+        }`}
     >
       <div className="absolute inset-0 pointer-events-none" style={glowStyle} />
       <div className="relative z-10 flex flex-col h-full">{children}</div>
@@ -445,7 +465,7 @@ function PricingSection() {
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
         {plans.map((plan, i) => (
           <motion.div
             key={i}
@@ -453,7 +473,7 @@ function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="flex"
+            className="flex w-full"
           >
             <GlowCard popular={plan.popular}>
               <div className="p-6 sm:p-8 flex flex-col h-full">
@@ -467,11 +487,10 @@ function PricingSection() {
 
                 <div className="mb-6">
                   <h3
-                    className={`font-semibold text-lg mb-2 clash-display ${
-                      plan.nameGradient
-                        ? "bg-gradient-to-r from-emerald-200 to-emerald-800 bg-clip-text text-transparent"
-                        : "text-white"
-                    }`}
+                    className={`font-semibold text-lg mb-2 clash-display ${plan.nameGradient
+                      ? "bg-gradient-to-r from-emerald-200 to-emerald-800 bg-clip-text text-transparent"
+                      : "text-white"
+                      }`}
                   >
                     {plan.name}
                   </h3>
