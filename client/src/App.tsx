@@ -7,8 +7,17 @@ import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+  // Debugging logs for production deployment
+  if (import.meta.env.PROD) {
+    console.log("Vite Base URL:", import.meta.env.BASE_URL);
+    console.log("Wouter Base:", base);
+    console.log("Current Pathname:", window.location.pathname);
+  }
+
   return (
-    <Router base={import.meta.env.BASE_URL}>
+    <Router base={base}>
       <Switch>
         <Route path="/" component={Home} />
         <Route component={NotFound} />
