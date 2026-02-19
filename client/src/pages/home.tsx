@@ -395,7 +395,7 @@ function GlowCard({ children, popular }: { children: React.ReactNode; popular?: 
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col h-full ${popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
+      className={`relative overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-neutral-950 flex flex-col h-full w-full ${popular ? "border-indigo-500 border-2" : "border-white/10 border-2"
         }`}
     >
       <div className="absolute inset-0 pointer-events-none" style={glowStyle} />
